@@ -1,0 +1,22 @@
+<?php 
+
+function civicrm_noconfirm_civicrm_postProcess($formName, &$form) {
+
+	// Disable confirmation for contribution forms
+    if($formName == 'CRM_Contribute_Form_Contribution_Main') {
+        $confirmForm =& $form->controller->_pages['Confirm'];
+        $confirmForm->preProcess();
+
+		// Hack to tell form validator that confirmation page is valid
+        $data     =& $form->controller->container();
+		$data['valid']['Confirm'] = 1;
+
+		// Redirect to thank you page
+        $confirmForm->postProcess();
+        $qfKey = $form->controller->_key;
+	CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/contribute/transact', "_qf_ThankYou_display=1&qfKey=$qfKey", true, null, false ) );
+    }
+
+}
+
+?>
