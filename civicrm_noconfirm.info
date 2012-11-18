@@ -2,5 +2,5 @@ name = CiviCRM Contribution Confirmation Disable
 description = Removes the second step of confirming a donation on contribution pages.
 dependencies[] = civicrm
 package = CiviCRM
-core = 6.x
+core = 7.x
 version = 1.0
