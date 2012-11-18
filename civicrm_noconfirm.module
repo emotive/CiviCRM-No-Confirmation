@@ -1,23 +1,26 @@
 <?php 
+/**
+ * @file
+ * Module to skip confirmation screen in CiviCRM contribution pages.
+ */
 
-function civicrm_noconfirm_civicrm_postProcess($formName, &$form) {
+/**
+ * Implements hook_civicrm_postProcess().
+ */
+function civicrm_noconfirm_civicrm_postprocess($form_name, &$form) {
+  // Disable confirmation for contribution forms.
+  if ($form_name == 'CRM_Contribute_Form_Contribution_Main') {
+    $confirm_form =& $form->controller->_pages['Confirm'];
+    $confirm_form->preProcess();
+    $confirm_form->buildQuickForm();
 
-	// Disable confirmation for contribution forms
-    if($formName == 'CRM_Contribute_Form_Contribution_Main') {
-        $confirmForm =& $form->controller->_pages['Confirm'];
-        $confirmForm->preProcess();
-        $confirmForm->buildQuickForm();
+    // Tell form validator that confirmation page is valid.
+    $data =& $form->controller->container();
+    $data['valid']['Confirm'] = 1;
 
-		// Hack to tell form validator that confirmation page is valid
-        $data     =& $form->controller->container();
-		$data['valid']['Confirm'] = 1;
-
-		// Redirect to thank you page
-        $confirmForm->postProcess();
-        $qfKey = $form->controller->_key;
-	CRM_Utils_System::redirect( CRM_Utils_System::url( 'civicrm/contribute/transact', "_qf_ThankYou_display=1&qfKey=$qfKey", true, null, false ) );
-    }
-
+    // Redirect to thank you page.
+    $confirm_form->postProcess();
+    $qf_key = $form->controller->_key;
+    CRM_Utils_System::redirect(CRM_Utils_System::url('civicrm/contribute/transact', "_qf_ThankYou_display=1&qfKey=$qf_key", TRUE, NULL, FALSE));
+  }
 }
-
-?>
