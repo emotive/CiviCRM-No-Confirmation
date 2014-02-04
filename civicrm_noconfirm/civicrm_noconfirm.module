@@ -6,6 +6,7 @@ function civicrm_noconfirm_civicrm_postProcess($formName, &$form) {
     if($formName == 'CRM_Contribute_Form_Contribution_Main') {
         $confirmForm =& $form->controller->_pages['Confirm'];
         $confirmForm->preProcess();
+        $confirmForm->buildQuickForm();
 
 		// Hack to tell form validator that confirmation page is valid
         $data     =& $form->controller->container();
